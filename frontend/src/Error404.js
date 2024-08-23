@@ -1,4 +1,6 @@
-function Error404() {
+import React from 'react';
+
+const Error404: React.FC = () => {
     return (
         <main>
             <h1>404: PAGE NOT FOUND</h1>
@@ -9,3 +11,4 @@ function Error404() {
 }
 
 export default Error404;
+

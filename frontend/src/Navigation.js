@@ -1,14 +1,23 @@
-import { useState, useEffect, useContext } from 'react'
-import { useHistory } from "react-router";
-import { CurrentUser } from './contexts/CurrentUser';
+import React, { useContext } from 'react';
+import { useHistory } from 'react-router-dom';  // Use 'react-router-dom' for routing
+import { CurrentUserContext, CurrentUserContextType } from './contexts/CurrentUser'; // Update import according to your actual context setup
 
-function Navigation() {
+// Define types for currentUser
+interface CurrentUser {
+    firstName: string;
+    lastName: string;
+}
 
-    const history = useHistory()
+// Define types for context
+interface CurrentUserContextType {
+    currentUser: CurrentUser | null;
+}
 
-    const { currentUser } = useContext(CurrentUser)
+const Navigation: React.FC = () => {
+    const history = useHistory();
+    const { currentUser } = useContext(CurrentUserContext) as CurrentUserContextType;
 
-    let loginActions = (
+    let loginActions: JSX.Element = (
         <>
             <li style={{ float: 'right' }}>
                 <a href="#" onClick={() => history.push("/sign-up")}>
@@ -21,14 +30,14 @@ function Navigation() {
                 </a>
             </li>
         </>
-    )
+    );
 
     if (currentUser) {
         loginActions = (
             <li style={{ float: 'right' }}>
                 Logged in as {currentUser.firstName} {currentUser.lastName}
             </li>
-        )
+        );
     }
 
     return (
@@ -52,7 +61,7 @@ function Navigation() {
                 {loginActions}
             </ul>
         </nav>
-    )
-}
+    );
+};
 
 export default Navigation;
