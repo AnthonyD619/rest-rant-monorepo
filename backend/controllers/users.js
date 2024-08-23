@@ -1,22 +1,32 @@
-const router = require('express').Router()
-const db = require("../models")
-const bcrypt = require('bcrypt')
+import express, { Request, Response } from 'express';
+import bcrypt from 'bcrypt';
+import { User } from '../models'; // Adjust the import path as needed
 
-const { User } = db
+const router = express.Router();
 
-router.post('/', async (req, res) => {
-    let { password, ...rest } = req.body
+// Define an interface for the request body
+interface CreateUserRequest extends Request {
+    body: {
+        password: string;
+        [key: string]: any; // Adjust this if you have a specific shape for your body
+    };
+}
+
+router.post('/', async (req: CreateUserRequest, res: Response) => {
+    const { password, ...rest } = req.body;
+    const passwordDigest = await bcrypt.hash(password, 10);
+
     const user = await User.create({
         ...rest,
-        passwordDigest: await bcrypt.hash(password, 10)
-    })
-    res.json(user)
-})
+        passwordDigest
+    });
 
+    res.json(user);
+});
 
-router.get('/', async (req, res) => {
-    const users = await User.findAll()
-    res.json(users)
-})
+router.get('/', async (req: Request, res: Response) => {
+    const users = await User.findAll();
+    res.json(users);
+});
 
-module.exports = router
+export default router;
